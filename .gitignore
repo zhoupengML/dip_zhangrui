@@ -1,0 +1,18 @@
+zhoupeng_016034910052_project2/*
+!/zhoupeng_016034910052_project2/IEEEtran.cls
+!/zhoupeng_016034910052_project2/zhoupeng_016034910052_proj2.tex
+!/zhoupeng_016034910052_project2/code/*.m
+
+zhoupeng_016034910052_project1/*
+!/zhoupeng_016034910052_project1/IEEEtran.cls
+!/zhoupeng_016034910052_project1/zhoupeng_016034910052_proj1.tex
+!/zhoupeng_016034910052_project1/code/*.m
+
+*~
+*DS_Store
+BMP images.zip
+BMP images/
+IEEEtran/
+comsoctran.mac.win.zip
+slides/
+*.pdf

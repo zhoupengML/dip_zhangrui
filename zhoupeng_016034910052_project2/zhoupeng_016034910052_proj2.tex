@@ -1,0 +1,95 @@
+\documentclass[journal,comsoc]{IEEEtran}
+
+\usepackage[T1]{fontenc}% optional T1 font encoding
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{amsmath}
+\interdisplaylinepenalty=2500
+\usepackage[cmintegrals]{newtxmath}
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+\begin{document}
+\title{Analysis of DFT and DCT}
+\author{Zhou~Peng,~\IEEEmembership{Member,~SEIEE~5-321,}}
+\maketitle
+
+\begin{abstract}
+  In this report, we have compared the results of Discrete Fourier Transform (DFT)
+  and Discrete Cosine Transform (DCT) of images.The DFT and DCT perform similar functions:
+  they both decompose a finite-length discrete-time signal into a sum of scaled basis functions.
+  We find that a signal's DCT representation tends to have more of its energy concentrated in
+  a small number of coefficients when compared to DFT.This is desirable for an image compression algorithm. 
+\end{abstract}
+
+% Note that keywords are not normally used for peerreview papers.
+\begin{IEEEkeywords}
+DFT,DCT,spectrum,image transform
+\end{IEEEkeywords}
+
+\section{Introduction}
+\IEEEPARstart{D}{igital} image processing methods are mainly divided into
+two categories: one method is directly processing in the spatial domain,
+and the other is transformed to the transform domain to perform image analysis and processing.
+In this report,we mainly focus on the transform domain methods.And we compared two transform
+methods:DFT and DCT.We choose two images with different gray level of detail and perform
+DFT and DCT on them.By choosing different amount of the transform coefficients and then
+doing IDFT and IDCT to reconstruct images,we find the DCT can reconstruct an image better
+than DFT with only even less coefficients.We think it's because the DFT signal is implicit
+periodicity and discontinuities usually occur at the boundaries.As we all know,if there exists
+discontinuities in a function,it needs more terms in its DFT or DCT components.However a DCT
+always has a continuous extension at the boundaries.Using this property of DCT,we can represent
+an image with less coefficients than its original elements.So DCT is usually applicated in
+image compressing.
+
+\section{Related Work}
+\label{sec:related work}
+There are a number of frequency domain transformation methods that can be used to deal with
+image processing problems.However, no matter which method is used, our purpose is to make
+the image processing task much easier.
+
+\subsection{Continuous Fourier Transform}
+\label{subsec:continuous fourier transform}
+The Fourier transform pair in the most general form for a continuous signal $x(t)$ is:
+\begin{equation}
+  \label{cft}
+  X(f)=\int_{-\infty}^{\infty}{x(t)e^{-j2\pi{ft}}dt}
+\end{equation}
+\begin{equation}
+  \label{icft}
+  x(t)=\int_{-\infty}^{\infty}X(f)e^{j2\pi{ft}}df
+\end{equation}
+The complex function $X(f)$ can be writen in polar form
+\begin{equation}
+  \label{x_f_polar}
+  X(f)=X_r(f)+jX_i(f)=|X(f)|e^{j\angle{X(f)}}
+\end{equation}
+in which $|X(f)|=\sqrt{X_r(f)^2+X_i(f)^2}$, $\angle{X(f)}=\arctan{\frac{X_i(f)}{X_r(f)}}$
+
+
+\section{Conclusion}
+
+The Discrete Fourier Transform (DFT) and Discrete Cosine Transform (DCT) perform similar functions:
+they both decompose a finite-length discrete-time vector into a sum of scaled-and-shifted basis functions.
+The difference between the two is the type of basis function used by each transform. the DFT uses a set of
+complex exponential functions, while the DCT uses only (real-valued) cosine functions.
+
+% use section* for acknowledgment
+\section*{Acknowledgment}
+I would like to thank Professor Zhang Rui for her instruction.
+
+\begin{thebibliography}{1}
+\bibitem{IEEEhowto:kopka}
+Digital Image Processing (Third Edition), Rafael C. Gonzalez, Richard E. Woods, 2011.
+\end{thebibliography}
+
+
+% \begin{IEEEbiographynophoto}{Zhou Peng}
+% received his bachelor degree from UESTC.He is now studying for a PhD in SJTU.
+% \end{IEEEbiographynophoto}
+
+\vfill
+
+\end{document}
+
+
