@@ -1,86 +1,338 @@
 \documentclass[journal,comsoc]{IEEEtran}
-
+%\usepackage[UTF8, heading = false, scheme = plain]{ctex}
 \usepackage[T1]{fontenc}% optional T1 font encoding
 \usepackage{url}
 \usepackage{graphicx}
 \usepackage{caption}
+\usepackage{subcaption}
 \usepackage{amsmath}
 \interdisplaylinepenalty=2500
 \usepackage[cmintegrals]{newtxmath}
 \hyphenation{op-tical net-works semi-conduc-tor}
 
+\makeatletter
+    \setlength\@fptop{0\p@}
+\makeatother
+
 \begin{document}
-\title{Analysis of DFT and DCT}
+\title{Experiment of Haze Removal Using Dark Channel Prior}
 \author{Zhou~Peng,~\IEEEmembership{Member,~SEIEE~5-321,}}
 \maketitle
 
 \begin{abstract}
-  In this report, we have compared the results of Discrete Fourier Transform (DFT)
-  and Discrete Cosine Transform (DCT) of images.The DFT and DCT perform similar functions:
-  they both decompose a finite-length discrete-time signal into a sum of scaled basis functions.
-  We find that a signal's DCT representation tends to have more of its energy concentrated in
-  a small number of coefficients when compared to DFT.This is desirable for an image compression algorithm. 
+  
+  Haze removal is a process that attempts to remove haze from images. In this report,
+  I reimplement the process of haze removal by utilizing the dark channel of images.
+  The dark channel prior indicates that most local patches in outdoor haze-free images
+  contain some pixels whose intensity is very low in some channels. Based on this prior,
+  we can remove haze effectively for many kinds of images. In addition, I also attempt
+  to modify values of some hyper parameters in the algorithm, and observe the influence
+  on the recovered image due to the changes of these parameters.
 \end{abstract}
 
 % Note that keywords are not normally used for peerreview papers.
 \begin{IEEEkeywords}
-DFT,DCT,spectrum,image transform
+Dehaze, image enhancement
 \end{IEEEkeywords}
 
 \section{Introduction}
-\IEEEPARstart{D}{igital} image processing methods are mainly divided into
-two categories: one method is directly processing in the spatial domain,
-and the other is transformed to the transform domain to perform image analysis and processing.
-In this report,we mainly focus on the transform domain methods.And we compared two transform
-methods:DFT and DCT.We choose two images with different gray level of detail and perform
-DFT and DCT on them.By choosing different amount of the transform coefficients and then
-doing IDFT and IDCT to reconstruct images,we find the DCT can reconstruct an image better
-than DFT with only even less coefficients.We think it's because the DFT signal is implicit
-periodicity and discontinuities usually occur at the boundaries.As we all know,if there exists
-discontinuities in a function,it needs more terms in its DFT or DCT components.However a DCT
-always has a continuous extension at the boundaries.Using this property of DCT,we can represent
-an image with less coefficients than its original elements.So DCT is usually applicated in
-image compressing.
+\IEEEPARstart{T}{here} is an overlap between image enhancement and image restoration. Although
+we distinguish them by emphasizing objective criteria and subjective standards, the final results
+is to improve the quality of images. Image dehaze is a typical representation of these two technologies.
+If the haze is regard as a noise, then the standard of removing the haze is clearly very objective.
+That is to restore the image to no haze under the situation. However, if taking the haze environment
+as an original image, then the dehaze is clearly in order to improve the subjective visual quality
+of the image by an enhancement. In this report, I regard the image dehazing operator as a process of
+image enhancement. First, I will perform haze removal by using MeituXiuXiu. And then, I will use the
+method which is called dark channel prior\cite{dark-channel} to perform haze removal. To get an
+insight of the dark channel method, I test many different values of hyper parameters. By comparison
+of the recovered images, it's easier to understand the theory of dark channel prior.
 
-\section{Related Work}
-\label{sec:related work}
-There are a number of frequency domain transformation methods that can be used to deal with
-image processing problems.However, no matter which method is used, our purpose is to make
-the image processing task much easier.
+% \section{Related Work}
+% \label{sec:related work}
 
-\subsection{Continuous Fourier Transform}
-\label{subsec:continuous fourier transform}
-The Fourier transform pair in the most general form for a continuous signal $x(t)$ is:
-\begin{equation}
-  \label{cft}
-  X(f)=\int_{-\infty}^{\infty}{x(t)e^{-j2\pi{ft}}dt}
-\end{equation}
-\begin{equation}
-  \label{icft}
-  x(t)=\int_{-\infty}^{\infty}X(f)e^{j2\pi{ft}}df
-\end{equation}
-The complex function $X(f)$ can be writen in polar form
-\begin{equation}
-  \label{x_f_polar}
-  X(f)=X_r(f)+jX_i(f)=|X(f)|e^{j\angle{X(f)}}
-\end{equation}
-in which $|X(f)|=\sqrt{X_r(f)^2+X_i(f)^2}$, $\angle{X(f)}=\arctan{\frac{X_i(f)}{X_r(f)}}$
+\begin{figure}[!hbt]
+  \centering
+  \begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{code/images/wumai.jpg}
+    \caption{Original hazy image}
+    \label{subfig:hazy-image}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{code/images/wumai_meitu_1.jpg}
+    \caption{Haze removal using MeituXiuXiu}
+    \label{subfig:haze-removal-using-meituxiuxiu}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{code/results/wumai_dehaze_7.eps}
+    \caption{Haze removal using dark channel method}
+    \label{subfig:haze-removal-using-dark-channel-methods}
+  \end{subfigure}
+  \caption{Comparison of dehazing results}
+  \label{fig:comparison-of-dehazing-results}
+\end{figure}
 
+% %\usepackage{subcaption}
+% \begin{figure}[!hbt]
+%   \centering
+%   \begin{subfigure}{.5\textwidth}
+%     \centering
+%     \includegraphics[width=0.9\textwidth]{code/images/wumai.jpg}
+%     \caption{}
+%     \label{subfig:original-image-with-haze}
+%   \end{subfigure}\\
+%   \begin{subfigure}{.5\textwidth}
+%     \centering
+%     \includegraphics[width=0.9\textwidth]{code/images/wumai_meitu_1.jpg}
+%     \caption{}
+%     \label{subfig:haze-removal-by-meituxiuxiu}
+%   \end{subfigure}
+%   \caption{Haze removal using MeituXiuxiu. (a) Original image with haze.
+%     (b) Haze removal by MeituXiuXiu.}
+%   \label{fig:haze-removal-using meituxiuxiu}
+% \end{figure}
+
+
+
+
+\section{Dark Channel Prior}
+\label{sec:dark-channel-prior}
+In most of the non-sky local areas, some pixels always have at least one color channel with a very low value.
+In other words, the minimum value of the intensity in a region is a small number.
+
+Suppose the input image is $J$.The dark channel of $J$ is given by
+\begin{equation}
+  \label{eq:dark-channel-prior}
+  J^{dark}(x)=\min_{y\in{\Omega(x)}}(\min_{c\in{\{r,g,b\}}}J^c(y))
+\end{equation}
+where $J^c$ is a color channel of $J$ and $\Omega(x)$ is a local patch centered at $x$.
+
+The dark channel theorem indicates that if $J$ is an outdoor haze-free image,the intensity of $J$'s dark channel
+is low and tends to be zero.Fig.\ref{fig:example-of-dark-channel} shows this phenomenon clearly.
+\begin{equation}
+  \label{eq:dark-channel-tends-to-be-zero}
+  J^{dark}\rightarrow0
+\end{equation}
+%\usepackage{subcaption}
+\begin{figure*}[!htb]
+  \centering
+  \begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[width=0.8\textwidth]{code/images/haze_free.jpg}
+    \caption{A haze-free image}
+    \label{subfig:a-haze-free-image}
+  \end{subfigure}%
+  \begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[width=0.8\textwidth]{code/results/haze_free_dc.eps}
+    \caption{Dark channel of (a)}
+    \label{subfig:dark-channel-of-c}
+  \end{subfigure}
+
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=0.8\textwidth]{code/images/wumai.jpg}
+    \caption{A hazy image}
+    \label{subfig:a-hazy-image}
+  \end{subfigure}%
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=0.8\textwidth]{code/results/wumai_dc.eps}
+    \caption{Dark channel of (c)}
+    \label{subfig:dark-channel-of-a}
+  \end{subfigure}
+
+  \caption{Examples of dark channel of hazy-free and haze images}
+  \label{fig:example-of-dark-channel}
+\end{figure*}
+
+\section{Dehaze Algorithm}
+\label{sec:dehaze-algorithm}
+
+In computer vision and computer graphics, the following equation described a hazy image is widely used:
+\begin{equation}
+  \label{eq:hazy-image-model}
+  I(x)=J(x)t(x)+A(1-t(x))
+\end{equation}
+Where $I$ is a image with haze,$J$ is no fog image we want to restore, $A$ is the global atmospheric light component,and $t$ is
+the transmission. Now we know $I$ and want to get the target value $J$.Obviously,there are countless solutions of this equations.
+Therefore, we need a prior knowledge.
+
+First normalize the equation (\ref{eq:hazy-image-model}):
+\begin{equation}
+  \label{eq:normalize-hazy-image-model}
+  \frac{I^c(x)}{A^c}=t(x)\frac{J^c(x)}{A^c}+1-t(x)
+\end{equation}
+The $c$ represents each color channel of an image.
+
+Assume that within each window transmission $t$ is a constant denoted by $\tilde{t}(x)$.$A$ has been given.
+Then,we calculate the dark channel on both sides of (\ref{eq:normalize-hazy-image-model}).
+\begin{equation}
+  \label{eq:dark-channel-normalize-hazy-image-model}
+  \min_{y\in{\Omega{(x)}}}(\min_c{\frac{I^c(y)}{A^c}})=\tilde{t}(x)\min_{y\in{\Omega{(x)}}}(\min_c{\frac{J^c(y)}{A^c}})+1-\tilde{t}(x)
+\end{equation}
+In equation (\ref{eq:dark-channel-normalize-hazy-image-model}),$J$ is fog-free image which we want to get.
+According to equation (\ref{eq:dark-channel-tends-to-be-zero}),we can get:
+\begin{equation}
+  \label{eq:zero-dark-channel-normalize-hazy-image-model}
+  J^{dark}(x)=\min_{y\in{\Omega{(x)}}}(\min_{c}J^c(y))=0
+\end{equation}
+Therefore, it can be deduced:
+\begin{equation}
+  \label{eq:deduced-zero-dark-channel-normalize}
+  \min_{y\in{\Omega{(x)}}}(\min_{c}\frac{J^c(y)}{A^c})=0
+\end{equation}
+Putting (\ref{eq:deduced-zero-dark-channel-normalize}) into (\ref{eq:dark-channel-normalize-hazy-image-model}),
+we can estimate the transmission $\tilde{t}(x)$ by
+\begin{equation}
+  \label{eq:transmission-estimation}
+  \tilde{t}(x)=1-\min_{y\in{\Omega{(x)}}}(\min_c{\frac{I^c(y)}{A^c}})
+\end{equation}
+
+In addition, the presence of fog makes humans feel the presence of depth of field.Therefore, it is necessary to
+retain a certain degree of fog, which can be implemented by introducing a factor between $[0,1]$ in the equation
+(\ref{eq:transmission-estimation}).
+\begin{equation}
+  \label{eq:parameter-transmission-estimation}
+  \tilde{t}(x)=1-\omega\min_{y\in{\Omega{(x)}}}(\min_c{\frac{I^c(y)}{A^c}})
+\end{equation}
+
+The atmospheric light is calculated using the dark channel and the original image. To ensure that we select the
+brightest pixels that are not objects within the image, you must look at the pixels in the dark channel.
+The simple approach used in the paper \cite{dark-channel} finds the $0.1\%$ brightest pixels of the dark channel,
+then selects the maximum value from those pixels in the original image.
+
+When the $t$'s value is small, $J(x)t(x)$ is very close to zero and the recovered $J$ tends to be noise.So we restrict
+the $t(x)$ by a lower bound $t_0$.The final $J(x)$ can be recovered by
+\begin{equation}
+  \label{eq:final-recovered-jx}
+  J(x)=\frac{I(x)-A}{\max{(t(x),t_0)}}+A
+\end{equation}
+$t_0$ usually is $0.1$.
+
+\section{Experiment}
+\label{sec:experiment}
+
+\subsection{Different Window Size}
+\label{subsec:different-window-size}
+
+I test many dark channel with different value of window size. Fig.\ref{fig:dark-channel-with-different-window-size} shows the results of
+dark chanenl with different window size.Apparently,the greater the size of a window, the greater the dark channel it
+contains.Dark channel will be more black.
+%\usepackage{subcaption}
+\begin{figure}[!htb]
+  \centering
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{code/results/wumai_dc_1.eps}
+    \caption{$3\times3$}
+    \label{subfig:3x3}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{code/results/wumai_dc_7.eps}
+    \caption{$15\times15$}
+    \label{subfig:15x15}
+  \end{subfigure}
+  \begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{code/results/wumai_dc_10.eps}
+    \caption{$21\times21$}
+    \label{subfig:21x21}
+  \end{subfigure}
+  \begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{code/results/wumai_dc_50.eps}
+    \caption{$101\times101$}
+    \label{subfig:101x101}
+  \end{subfigure}
+  \caption{Dark channel with different window size}
+  \label{fig:dark-channel-with-different-window-size}
+\end{figure}
+
+\subsection{Recovered Image}
+\label{subsec:recovered-image}
+
+I fix the window size to $15\times15$. Using dark channel dehazing algorithm, I get a
+haze-free image like Fig.\ref{fig:haze-removal-results}. I found that the haze removal
+method can remove the haze in the crowd effectively. But for the sky, the algorithm is not
+so good. As a solution, I added a parameter: the largest global atmospheric value, when the
+calculated value is greater than this value, it takes the value. Fig.\ref{fig:limit-of-largest-atmospheric-light-value}
+shows the haze-free results by using different largest global atmospheric values. Apparently,
+when we set the value to $0.7$, the hog-free image looks better.
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.5\textwidth]{code/results/wumai_dehaze_10.eps}
+  \caption{Haze removal results}
+  \label{fig:haze-removal-results}    
+\end{figure}
+
+
+%\usepackage{subcaption}
+\begin{figure*}[t]
+  \centering
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{code/results/wumai_dehaze_3.eps}
+    \caption{0.3}
+    \label{subfig:atmospheric-light-0.3}
+  \end{subfigure}%
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{code/results/wumai_dehaze_5.eps}
+    \caption{0.5}
+    \label{subfig:atmospheric-light-0.5}
+  \end{subfigure}\\
+  \begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{code/results/wumai_dehaze_6.eps}
+    \caption{0.6}
+    \label{subfig:atmospheric-light-0.6}
+  \end{subfigure}%
+  \begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{code/results/wumai_dehaze_7.eps}
+    \caption{0.7}
+    \label{subfig:atmospheric-light-0.7}
+  \end{subfigure}\\
+
+  \begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{code/results/wumai_dehaze_8.eps}
+    \caption{0.8}
+    \label{subfig:atmospheric-light-0.8}
+  \end{subfigure}
+  \caption{Limit of largest atmospheric light value}
+  \label{fig:limit-of-largest-atmospheric-light-value}
+\end{figure*}
+
+\subsection{Comparison With MeituXiuXiu}
+\label{subsec:comparison-with-meituxiuxiu}
+
+Fig.\ref{fig:comparison-of-dehazing-results} shows the original hazy image and the
+corresponding dehazing images by using different methods. I find the result of
+MeituXiuXiu can only remove some haze in the crowd. The dark channel method can
+make the entire image look better.
+%\usepackage{subcaption}
 
 \section{Conclusion}
 
-The Discrete Fourier Transform (DFT) and Discrete Cosine Transform (DCT) perform similar functions:
-they both decompose a finite-length discrete-time vector into a sum of scaled-and-shifted basis functions.
-The difference between the two is the type of basis function used by each transform. the DFT uses a set of
-complex exponential functions, while the DCT uses only (real-valued) cosine functions.
+Dark channel prior is a statistical result for a lot of outdoor photos. If the target scene are
+similar to the atmosphere light such as snow, white wall and sea, due to the premise condition is not
+correct, so it's generally unable to obtain satisfactory results. But for general scenery images,
+this algorithm can work well.
 
 % use section* for acknowledgment
 \section*{Acknowledgment}
 I would like to thank Professor Zhang Rui for her instruction.
 
 \begin{thebibliography}{1}
-\bibitem{IEEEhowto:kopka}
-Digital Image Processing (Third Edition), Rafael C. Gonzalez, Richard E. Woods, 2011.
+\bibitem{dark-channel}
+  He K, Sun J, Tang X. Single image haze removal using dark channel prior[J].
+  IEEE transactions on pattern analysis and machine intelligence, 2011, 33(12): 2341-2353.
 \end{thebibliography}
 
 
