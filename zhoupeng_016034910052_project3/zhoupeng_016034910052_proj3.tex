@@ -1,0 +1,131 @@
+\documentclass[journal,comsoc]{IEEEtran}
+%\usepackage[UTF8, heading = false, scheme = plain]{ctex}
+\usepackage[T1]{fontenc}% optional T1 font encoding
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\interdisplaylinepenalty=2500
+\usepackage[cmintegrals]{newtxmath}
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+\makeatletter
+    \setlength\@fptop{0\p@}
+\makeatother
+
+\begin{document}
+\title{Image Denosing with Wavelet-based Algorithms}
+\author{Zhou~Peng,~\IEEEmembership{Member,~SEIEE~5-321,}}
+\maketitle
+
+\begin{abstract}
+  
+\end{abstract}
+
+% Note that keywords are not normally used for peerreview papers.
+\begin{IEEEkeywords}
+
+\end{IEEEkeywords}
+
+\section{Introduction}
+\IEEEPARstart{T}{here} is an overlap between image enhancement and image restoration. Although
+
+% \section{Related Work}
+% \label{sec:related work}
+
+\section{Wavelet-based Algorithms}
+\label{sec:wavelet-based-algorithms}
+
+\subsection{Hard Thresholding in Wavelet Bases}
+\label{subsec:hard-thresholding-in-wavelet-bases}
+
+A simple but efficient non-linear denoising estimator is obtained by thresholding the coefficients of $f$
+in a well chosen orthogonal basis.
+In the following, we will focuss on a wavelet basis, which is efficient to denoise piecewise regular images.
+The hard thresholding operator with threshold $T\ge{0}$ applied to some image $f$ is defined as
+\begin{eqnarray}
+  S_T^0(f)&=&\sum_{\mid{<f,\psi_m>\mid}>T}<f,\psi_m>\psi_m\\
+  &=&\sum_{m}s_T^0{(<f,\psi_m>)\psi_m}\nonumber
+\end{eqnarray}
+where the hard thresholding operator is
+\begin{eqnarray}
+  s_T^{0}(\alpha)=
+  \begin{cases}
+    \alpha\ \ \ if\ \mid{\alpha}\mid>T\\
+    0\ \ \ otherwise
+  \end{cases}
+\end{eqnarray}
+The denoising estimator is then defined as
+\begin{equation}
+  \tilde{f}=S_T^0(f)
+\end{equation}
+
+\section{Experiment}
+\label{sec:experiment}
+
+\subsection{Gaussian Noise}
+\label{subsec:gaussian-noise}
+
+For real life applications, we cann't have access to the underlying image $f_0$. We assume that $f_0$
+is known, and $f=f_0+w$ is generated using a single realization of the noise $w$.We define the estimated image
+as $\tilde{f}$ which is the denoised image. Fig. \ref{fig:add-gaussian-noise} shows images which were added Gaussian noise with standard deviation $0.1$. 
+
+%\usepackage{subcaption}
+\begin{figure}[!htb]
+  \centering
+  \begin{subfigure}[t]{.25\textwidth}
+    \centering
+    \includegraphics[width=0.86\textwidth]{./code/results/lena512.eps}
+    \caption{Lena}
+    \label{subfig:lena}
+  \end{subfigure}%
+  \begin{subfigure}[t]{.25\textwidth}
+    \centering
+    \includegraphics[width=0.86\textwidth]{./code/results/lena512_gaussian_0_1.eps}
+    \caption{Gaussian noisy image of (a),\ $\sigma=0.1$}
+    \label{subfig:gaussian-noisy-image-of-a}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.25\textwidth}
+    \centering
+    \includegraphics[width=0.86\textwidth]{./code/results/flowr.eps}
+    \caption{Flower}
+    \label{subfig:flower}
+  \end{subfigure}%
+  \begin{subfigure}[t]{0.25\textwidth}
+    \centering
+    \includegraphics[width=0.86\textwidth]{./code/results/flowr_gaussian_0_1.eps}
+    \caption{Gaussian noisy image of (c),\ $\sigma=0.1$}
+    \label{subfig:gaussian-noisy-image-of-c}
+  \end{subfigure}
+  \caption{Add Gaussian noise}
+  \label{fig:add-gaussian-noise}
+\end{figure}
+
+\subsection{Denosing with Hard Thresholding}
+\label{subsec:denosing-with-hard-thresholding}
+
+
+
+\section{Conclusion}
+
+% use section* for acknowledgment
+\section*{Acknowledgment}
+I would like to thank Professor Zhang Rui for her instruction.
+
+\begin{thebibliography}{1}
+\bibitem{dark-channel}
+  He K, Sun J, Tang X. Single image haze removal using dark channel prior[J].
+  IEEE transactions on pattern analysis and machine intelligence, 2011, 33(12): 2341-2353.
+\end{thebibliography}
+
+
+% \begin{IEEEbiographynophoto}{Zhou Peng}
+% received his bachelor degree from UESTC.He is now studying for a PhD in SJTU.
+% \end{IEEEbiographynophoto}
+
+\vfill
+
+\end{document}
+
+
