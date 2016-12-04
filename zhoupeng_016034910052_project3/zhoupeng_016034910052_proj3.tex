@@ -10,6 +10,8 @@
 \usepackage[cmintegrals]{newtxmath}
 \hyphenation{op-tical net-works semi-conduc-tor}
 
+
+
 \makeatletter
     \setlength\@fptop{0\p@}
 \makeatother
@@ -20,22 +22,60 @@
 \maketitle
 
 \begin{abstract}
-  
+  In the real world, signals do not exist without noise. The Gaussian noise
+  is the most typical noise which exists in our life. In this report, I will
+  exploit wavelet denoising applied in image processing. I added different
+  amount of the Gaussian noise by changing its standard deviation, and tested
+  the performance of denosing using two methods:hard threshold and soft threshold.
+  To find the best threshold for both hard method and soft method, I have tested
+  many defferent thresholds and computed the signal to noise ratio(SNR) for recovered
+  images. Our results shows that the best value of threshold for hard threshold is about
+  at $3\sigma$ and for soft threshold is about at $1.5\sigma$ where the $\sigma$ is
+  standard deviation of the added Gaussian noise. I also find the denoised image
+  of soft threshold is more smooth than the denoised images of hard threshold.
 \end{abstract}
 
 % Note that keywords are not normally used for peerreview papers.
 \begin{IEEEkeywords}
-
+Wavelet denoising,Gaussian noise,hard threshold,soft threshold
 \end{IEEEkeywords}
 
 \section{Introduction}
-\IEEEPARstart{T}{here} is an overlap between image enhancement and image restoration. Although
+
+\IEEEPARstart{T}{he} wavelet transform is similar to the Fourier transform with a completely different merit function.
+The main difference is that Fourier transform decomposes the signal into sines and cosines, in contrary
+the wavelet transform uses functions that are localized in both the real and Fourier space.
+Generally, the wavelet transform can be expressed by the following equation:
+\begin{equation}
+  F(a,b)=\int_{-\infty}^{\infty}f(x)\psi_{(a,b)}^*(x)dx
+\end{equation}
+where the $*$ is the complex conjugate symbol and function $\psi$ is some function. 
+
+As it is seen, the Wavelet transform is in fact an infinite set of various transforms, depending on the
+merit function used for its computation. This is the main reason why we can hear the term wavelet transform
+in very different situations and applications. 
+
+
 
 % \section{Related Work}
 % \label{sec:related work}
 
-\section{Wavelet-based Algorithms}
+\section{Wavelet-based Denoising Algorithms}
 \label{sec:wavelet-based-algorithms}
+
+\subsection{Wavelet Denoising}
+\label{sec:wavelet-denoising}
+
+As we all know that signals do not exist without noise in the real world.
+Under ideal conditions, this noise may decrease to such negligible
+levels, while the signal increases to such significant levels, that for all practical purposes denoising
+is not necessary. Unfortunately, the noise corrupting the signal, more often than not, must be
+removed in order to recover the signal and proceed with further data analysis.
+
+The principle of wavelet denoising is that we can convert the original signal from time-space domain to
+the time-scale domain via the wavelet transform. And in the time-scale domain, the noise can be eliminated
+easily. There are so many different methods for wavelet denoising. In this report, I will mainly focus on
+the hard threshold method and the soft threshold method.
 
 \subsection{Hard Thresholding in Wavelet Bases}
 \label{subsec:hard-thresholding-in-wavelet-bases}
@@ -56,10 +96,39 @@ where the hard thresholding operator is
     0\ \ \ otherwise
   \end{cases}
 \end{eqnarray}
+Fig. \ref{fig:hard-threshold-function} illustrates $s_T^0{(\alpha)}$ with $T=1$.
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.4\textwidth]{./code/results/hard_threshold.eps}
+  \caption{Hard threshold function}
+  \label{fig:hard-threshold-function}    
+\end{figure}
+
 The denoising estimator is then defined as
 \begin{equation}
   \tilde{f}=S_T^0(f)
 \end{equation}
+
+\subsection{Soft Thresholding in Wavelet Bases}
+\label{subsec:soft-thresholding-inwavelet-bases}
+
+The estimated image $\tilde{f}$ using hard thresholding suffers from many artifacts.
+It is possible to improve the result by using soft thresholding, defined as
+\begin{equation}
+  \tilde{f}=S_T^1(f)=\sum_ms_T^1(<f,\psi_m>)\psi_m
+\end{equation}
+where
+\begin{equation}
+  s_T^1(\alpha)=\max{(0,1-\frac{T}{\mid{\alpha}\mid}})\alpha
+\end{equation}
+Fig. \ref{fig:soft-threshold-function} illustrates $s_T^1{(\alpha)}$ with $T=1$.
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.4\textwidth]{./code/results/soft_threshold.eps}
+  \caption{Soft threshold function}
+  \label{fig:soft-threshold-function}    
+\end{figure}
+
 
 \section{Experiment}
 \label{sec:experiment}
@@ -68,33 +137,33 @@ The denoising estimator is then defined as
 \label{subsec:gaussian-noise}
 
 For real life applications, we cann't have access to the underlying image $f_0$. We assume that $f_0$
-is known, and $f=f_0+w$ is generated using a single realization of the noise $w$.We define the estimated image
-as $\tilde{f}$ which is the denoised image. Fig. \ref{fig:add-gaussian-noise} shows images which were added Gaussian noise with standard deviation $0.1$. 
-
+is known, and $f=f_0+w$ is generated using a single realization of the noise $w$. We define the estimated image
+as $\tilde{f}$ which is the denoised image. Fig. \ref{fig:add-gaussian-noise} shows images which were added
+Gaussian noise with standard deviation $0.1$. 
 %\usepackage{subcaption}
 \begin{figure}[!htb]
   \centering
   \begin{subfigure}[t]{.25\textwidth}
     \centering
-    \includegraphics[width=0.86\textwidth]{./code/results/lena512.eps}
+    \includegraphics[width=0.68\textwidth]{./code/results/lena512.eps}
     \caption{Lena}
     \label{subfig:lena}
   \end{subfigure}%
   \begin{subfigure}[t]{.25\textwidth}
     \centering
-    \includegraphics[width=0.86\textwidth]{./code/results/lena512_gaussian_0_1.eps}
+    \includegraphics[width=0.68\textwidth]{./code/results/lena512_gaussian_0_1.eps}
     \caption{Gaussian noisy image of (a),\ $\sigma=0.1$}
     \label{subfig:gaussian-noisy-image-of-a}
   \end{subfigure}
   \begin{subfigure}[t]{0.25\textwidth}
     \centering
-    \includegraphics[width=0.86\textwidth]{./code/results/flowr.eps}
+    \includegraphics[width=0.68\textwidth]{./code/results/flowr.eps}
     \caption{Flower}
     \label{subfig:flower}
   \end{subfigure}%
   \begin{subfigure}[t]{0.25\textwidth}
     \centering
-    \includegraphics[width=0.86\textwidth]{./code/results/flowr_gaussian_0_1.eps}
+    \includegraphics[width=0.68\textwidth]{./code/results/flowr_gaussian_0_1.eps}
     \caption{Gaussian noisy image of (c),\ $\sigma=0.1$}
     \label{subfig:gaussian-noisy-image-of-c}
   \end{subfigure}
@@ -102,12 +171,333 @@ as $\tilde{f}$ which is the denoised image. Fig. \ref{fig:add-gaussian-noise} sh
   \label{fig:add-gaussian-noise}
 \end{figure}
 
-\subsection{Denosing with Hard Thresholding}
-\label{subsec:denosing-with-hard-thresholding}
+\subsection{Denoising with Hard Threshold}
+\label{subsec:denoising-with-hard-thresholding}
 
+I performed several denoising experiment by adding different amount of the Gaussian
+noise. I converted the gray value of images in the range of $[0,1]$. Setting the
+standard deviation of the Gaussian noise in $[0.1,0.2,0.3]$, I tested the performance of
+wavelet denoising based on hard threshold. 
+I tested several hard threshold in $[0.1\sigma,0.15\sigma,0.3\sigma,0.45\sigma]$,
+where $\sigma$ is the standard deviation of the added Gaussian noise.
+Fig. \ref{fig:sigma-10-hard-threshold} - Fig. \ref{fig:sigma-30-hard-threshold} shows our results.
+We can find that the wavelet denoising algorithm based on hard threshold is effective to
+denoise Gaussian noise. And the best hard threshold is approximately at $0.3\sigma$.
+
+
+
+
+
+\subsection{Denoising with Soft Threshold}
+\label{subsec:denoising-with-soft-thresholding}
+
+Analogous to hard threshold denoising algorithm, I keep other conditions invariant, and
+change the hard threshold to soft threshold. Fig. \ref{fig:sigma-10-soft-threshold} -
+Fig. \ref{fig:sigma-30-soft-threshold} shows the results. From the results, we can
+easily find that the best soft threshold is approximately at $0.15\sigma$. When the
+soft threshold is too small, the Gaussian noise can't be eliminated effectively. But
+if the soft threshold is too big, the recovered images will become more fuzzy.
+Compared with the best denoising images using hard threshold, the soft threshold seems
+to make the denoising images more smooth.
+
+
+
+\subsection{Finding the Best Threshold}
+\label{subsec:finding-the-best-threshold}
+
+%\usepackage{subcaption}
+\begin{figure}[!hbt]
+  \centering
+  \begin{subfigure}{.36\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{./code/results/lena512_snr.eps}
+    \caption{SNR with different thresholds of Lena, $\sigma=0.1$}
+    \label{subfig:snr-threshold-lena}
+  \end{subfigure}
+  \begin{subfigure}{.36\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{./code/results/flowr_snr.eps}
+    \caption{SNR with different thresholds of Flower, $\sigma=0.1$}
+    \label{subfig:snr-threshold-flower}
+  \end{subfigure}
+  \caption{SNR vs Threshold}
+  \label{fig:snr-lena-flower}
+\end{figure}
+
+We define the empirical signal to noise ratio as
+\begin{eqnarray}
+  SNR=20\log_{10}(\frac{\|f_0\|}{\|f_0-\tilde{f_0}\|})
+\end{eqnarray}
+where $f_0$ is the original image and $\tilde{f_0}$ is the recovered image.
+
+To determine the best threshold $T$ for both hard and soft thresholding, I tested several
+$T$ values in $[0.1\sigma,6\sigma]$. I tested two images(Lena and Flower) which were added gaussian noise
+whose standard deviation is $0.1$. Fig. \ref{fig:snr-lena-flower} shows the experiment results.
+From the two images, we can estimate that the best threshold for hard threshold is about $3\sigma$
+and for soft threshold is about $1.5\sigma$.
+
+
+
+% hard threshold
+%\usepackage{subcaption}
+\begin{figure}[!hbt]
+  \centering
+  \begin{subfigure}{.25\textwidth}
+    \centering
+    \includegraphics[width=0.68\textwidth]{./code/results/lena512.eps}
+    \caption{Original image of Lena}
+    \label{subfig:original-image-of-lena}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering
+    \includegraphics[width=0.68\textwidth]{./code/results/lena512_noise_sigma_10.eps}
+    \caption{Noisy image of (a)}
+    \label{subfig:sigma-10-noisy-image-of-a}
+  \end{subfigure}
+
+  \begin{subfigure}{0.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/lena512_sigma_10_hard_1.eps}
+    \caption{Hard threshold: $0.1\sigma$}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/lena512_sigma_10_hard_15.eps}
+    \caption{Hard threshold: $0.15\sigma$}
+  \end{subfigure}
+
+  \begin{subfigure}{0.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/lena512_sigma_10_hard_30.eps}
+    \caption{Hard threshold: $0.3\sigma$}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/lena512_sigma_10_hard_45.eps}
+    \caption{Hard threshold: $0.45\sigma$}
+  \end{subfigure}
+  
+  \caption{Denoising using hard threshold, $\sigma=0.1$}
+  \label{fig:sigma-10-hard-threshold}
+\end{figure}
+
+\begin{figure}[!hbt]
+  \centering
+  \begin{subfigure}{.25\textwidth}
+    \centering
+    \includegraphics[width=0.68\textwidth]{./code/results/lena512.eps}
+    \caption{Original image of Lena}
+    \label{subfig:original-image-of-lena}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering
+    \includegraphics[width=0.68\textwidth]{./code/results/lena512_noise_sigma_20.eps}
+    \caption{Noisy image of (a)}
+    \label{subfig:sigma-10-noisy-image-of-a}
+  \end{subfigure}
+
+  \begin{subfigure}{0.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/lena512_sigma_20_hard_1.eps}
+    \caption{Hard threshold: $0.1\sigma$}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/lena512_sigma_20_hard_15.eps}
+    \caption{Hard threshold: $0.15\sigma$}
+  \end{subfigure}
+
+  \begin{subfigure}{0.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/lena512_sigma_20_hard_30.eps}
+    \caption{Hard threshold: $0.3\sigma$}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/lena512_sigma_20_hard_45.eps}
+    \caption{Hard threshold: $0.45\sigma$}
+  \end{subfigure}
+  
+  \caption{Denoising using hard threshold, $\sigma=0.2$}
+  \label{fig:sigma-20-hard-threshold}
+\end{figure}
+
+\begin{figure}[!hbt]
+  \centering
+  \begin{subfigure}{.25\textwidth}
+    \centering
+    \includegraphics[width=0.68\textwidth]{./code/results/lena512.eps}
+    \caption{Original image of Lena}
+    \label{subfig:original-image-of-lena}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering
+    \includegraphics[width=0.68\textwidth]{./code/results/lena512_noise_sigma_30.eps}
+    \caption{Noisy image of (a)}
+    \label{subfig:sigma-10-noisy-image-of-a}
+  \end{subfigure}
+
+  \begin{subfigure}{0.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/lena512_sigma_30_hard_1.eps}
+    \caption{Hard threshold: $0.1\sigma$}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/lena512_sigma_30_hard_15.eps}
+    \caption{Hard threshold: $0.15\sigma$}
+  \end{subfigure}
+
+  \begin{subfigure}{0.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/lena512_sigma_30_hard_30.eps}
+    \caption{Hard threshold: $0.3\sigma$}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/lena512_sigma_30_hard_45.eps}
+    \caption{Hard threshold: $0.45\sigma$}
+  \end{subfigure}
+  
+  \caption{Denoising using hard threshold, $\sigma=0.3$}
+  \label{fig:sigma-30-hard-threshold}
+\end{figure}
+
+% Soft threshold
+\begin{figure}[!hbt]
+  \centering
+  \begin{subfigure}{.25\textwidth}
+    \centering
+    \includegraphics[width=0.68\textwidth]{./code/results/lena512.eps}
+    \caption{Original image of Lena}
+    \label{subfig:original-image-of-lena}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering
+    \includegraphics[width=0.68\textwidth]{./code/results/lena512_noise_sigma_10.eps}
+    \caption{Noisy image of (a)}
+    \label{subfig:sigma-10-noisy-image-of-a}
+  \end{subfigure}
+
+  \begin{subfigure}{0.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/lena512_sigma_10_soft_1.eps}
+    \caption{Soft threshold: $0.1\sigma$}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/lena512_sigma_10_soft_15.eps}
+    \caption{Soft threshold: $0.15\sigma$}
+  \end{subfigure}
+
+  \begin{subfigure}{0.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/lena512_sigma_10_soft_30.eps}
+    \caption{Soft threshold: $0.3\sigma$}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/lena512_sigma_10_soft_45.eps}
+    \caption{Soft threshold: $0.45\sigma$}
+  \end{subfigure}
+  
+  \caption{Denoising using soft threshold, $\sigma=0.1$}
+  \label{fig:sigma-10-soft-threshold}
+\end{figure}
+
+\begin{figure}[!hbt]
+  \centering
+  \begin{subfigure}{.25\textwidth}
+    \centering
+    \includegraphics[width=0.68\textwidth]{./code/results/lena512.eps}
+    \caption{Original image of Lena}
+    \label{subfig:original-image-of-lena}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering
+    \includegraphics[width=0.68\textwidth]{./code/results/lena512_noise_sigma_20.eps}
+    \caption{Noisy image of (a)}
+    \label{subfig:sigma-10-noisy-image-of-a}
+  \end{subfigure}
+
+  \begin{subfigure}{0.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/lena512_sigma_20_soft_1.eps}
+    \caption{Soft threshold: $0.1\sigma$}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/lena512_sigma_20_soft_15.eps}
+    \caption{Soft threshold: $0.15\sigma$}
+  \end{subfigure}
+
+  \begin{subfigure}{0.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/lena512_sigma_20_soft_30.eps}
+    \caption{Soft threshold: $0.3\sigma$}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/lena512_sigma_20_soft_45.eps}
+    \caption{Soft threshold: $0.45\sigma$}
+  \end{subfigure}
+  
+  \caption{Denoising using soft threshold, $\sigma=0.2$}
+  \label{fig:sigma-20-soft-threshold}
+\end{figure}
+
+\begin{figure}[!hbt]
+  \centering
+  \begin{subfigure}{.25\textwidth}
+    \centering
+    \includegraphics[width=0.68\textwidth]{./code/results/lena512.eps}
+    \caption{Original image of Lena}
+    \label{subfig:original-image-of-lena}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering
+    \includegraphics[width=0.68\textwidth]{./code/results/lena512_noise_sigma_30.eps}
+    \caption{Noisy image of (a)}
+    \label{subfig:sigma-10-noisy-image-of-a}
+  \end{subfigure}
+
+  \begin{subfigure}{0.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/lena512_sigma_30_soft_1.eps}
+    \caption{Soft threshold: $0.1\sigma$}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/lena512_sigma_30_soft_15.eps}
+    \caption{Soft threshold: $0.15\sigma$}
+  \end{subfigure}
+
+  \begin{subfigure}{0.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/lena512_sigma_30_soft_30.eps}
+    \caption{Soft threshold: $0.3\sigma$}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/lena512_sigma_30_soft_45.eps}
+    \caption{Soft threshold: $0.45\sigma$}
+  \end{subfigure}
+  
+  \caption{Denoising using soft threshold, $\sigma=0.3$}
+  \label{fig:sigma-30-soft-threshold}
+\end{figure}
 
 
 \section{Conclusion}
+
+This report shows how to use wavelets to denoise images. Because wavelets localize
+features in your data to different scales, you can preserve important image features
+while removing noise. The basic idea behind wavelet denoising, or wavelet thresholding,
+is that the wavelet transform leads to a sparse representation for many real-world images.
+What this means is that the wavelet transform concentrates image features in a few
+large-magnitude wavelet coefficients. Wavelet coefficients which are small in value are
+typically noise and you can remove them without affecting the image quality. After you
+threshold the coefficients, you can reconstruct the data using the inverse wavelet transform.
 
 % use section* for acknowledgment
 \section*{Acknowledgment}
