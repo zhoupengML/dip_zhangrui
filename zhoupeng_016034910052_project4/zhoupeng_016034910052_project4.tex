@@ -15,47 +15,233 @@
 \makeatother
 
 \begin{document}
-\title{the Research on Morphological Filtering Algorithms}
+\title{Research on Morphological Filtering Algorithms}
 \author{Zhou~Peng,~\IEEEmembership{016034910052,~SEIEE~5-321,}}
 \maketitle
 
 \begin{abstract}
-
+  Mathematical morphology provides an approach to the processing of digital images
+  that is based on the spatial structure of objects.
+  In this report, I explore four different morphological operations: dilation, erosion,
+  opening and closing operations to get a better segmentation for a salt-and-pepper
+  noisy\cite{noise} image. Results of the experiments show that noise can be effectively removed from
+  binary images using combinations of erosion and dilation operations. 
 \end{abstract}
 
 % Note that keywords are not normally used for peerreview papers.
 \begin{IEEEkeywords}
-
+Morphology,dilation,erosion,opening,closing
 \end{IEEEkeywords}
+
+% \begin{IEEEkeywords}
+% Morphology,dilation,erosion,opening,closing,segmentation
+% \end{IEEEkeywords}
 
 \section{Introduction}
 
-\IEEEPARstart{E}{xample} 
+\IEEEPARstart{M}athematical morphological provides an approach to the processing of digital images
+that is based on the nature structure of objects in a scene. 
+Additionally, edge detection and morphological technique were applied to obtain a
+binary mask of the boundary too.
+
+Dilation and erosion operations are fundamental to morphological processing.
+Dilation adds pixels to the boundaries of objects in an image, while erosion
+removes pixels on object boundaries. In this paper, the combinations of dilate-erode
+operations are used to process the image.
+
+%\usepackage{subcaption}
+\begin{figure}[!htb]
+  \centering
+  \begin{subfigure}[t]{.5\textwidth}
+    \centering
+    \includegraphics[width=0.63\textwidth]{./code/results/coins_original.eps}
+    \setcaptionwidth{0.63\textwidth}
+    \caption{Original image}
+    \label{subfig:./code/results/coins_original.eps}
+  \end{subfigure}
+  \begin{subfigure}[t]{.5\textwidth}
+    \centering
+    \includegraphics[width=0.63\textwidth]{./code/results/coins_noise.eps}
+    \setcaptionwidth{0.63\textwidth}
+    \caption{Add salt-and-pepper noise}
+    \label{subfig:./code/results/coins_noise.eps}
+  \end{subfigure}
+  \begin{subfigure}[t]{.5\textwidth}
+    \centering
+    \includegraphics[width=0.63\textwidth]{./code/results/coins_direct_segmentation.eps}
+    \setcaptionwidth{0.63\textwidth}
+    \caption{Segmentation for (b)}
+    \label{subfig:./code/results/coins_direct_segmentation.eps}
+  \end{subfigure}%
+
+  \caption{Segmentation for noisy image}
+  \label{fig:Segmentation for noisy image}
+\end{figure}
+
+
+\subsection{Dilation}
+
+Dilation is used to add pixels at region boundaries or to fill in holes in the image. 
+The dilation of $A$ by $B$ denoted $A\oplus{}B$, is defined as
+\begin{equation}
+A\oplus{B}=\{Z\mid{}(\hat{B})z\cap{A}\ne\emptyset\}
+\end{equation}
+where $\emptyset$ is the empty set and $B$ is the structuring element.
+In other words, dilation $A$ by $B$ is the set consisting of all the
+structuring element origin location. Dilation is applied to the image to
+link the pixels as shown in the image.
+
+\subsection{Erosion}
+
+Erosion does the opposite operation of dilation. While dilation expands
+boundaries and fills holes, erosion reduces boundaries and increases size of holes.
+Erosion reduces boundaries and increases size of holes. It will set ON pixel to OFF
+if the structuring element does not completely overlap ON valued pixels. The erosion
+of $A$ by $B$ denoted $A\ominus{}B$, is defined as
+\begin{equation}
+A\ominus{}B=\{Z\mid{}(\hat{B})z\subseteq{A}\}
+\end{equation}
+Erosion can also be used to reduce noises from an image.
+
+\subsection{Opening and Closing}
+
+Erosion and dilation can be performed repeatedly on an image until the
+desired output is produced. However, the order of the operations can
+make a difference to the processed image. Two common operations that
+combine erosion and dilation are known as opening and closing.
+Opening operation involves erosion followed by dilation while closing
+operation starts with dilation followed by erosion. Opening smoothes
+the contours of objects, breaks narrow joints and eliminates thin protrusions.
+Closing produces the smoothing of sections of contours but it fuses narrow breaks,
+fills gaps in the contour and eliminates small holes. Opening operation is used
+when the image has many small noise regions. Closing, on the other hand, is used
+to restore connectivity between close proximity objects.
+
 
 % \section{Related Work}
 % \label{sec:related work}
 
-\section{section}
-\label{sec:section}
-
-\subsection{subsection}
-\label{subsec:subsection}
-
 \section{Experiment}
 \label{sec:experiment}
 
+\subsection{Segmentation for Noisy Image}
+
+I add salt-and-pepper noise\cite{noise} to the image which the noise density is $0.02$.
+And then I use the Otsu method\cite{Otsu} to segment the noisy image.
+Fig. \ref{fig:Segmentation for noisy image} shows the results.
+
+
+\subsection{Dilation}
+
+The generalization of dilation to gray-level images is that the gray-level value at any point
+is replaced by the maximum intensity value covered by the flat structuring element.
+Fig. \ref{subfig:./code/results/coins_dilate_segmentation.eps} shows the results of dilation.
+We can find that the dilation operation could reduce pepper noise and make the salt noise
+become bigger.
+
+%\usepackage{subcaption}
+\begin{figure}[!htb]
+  \centering
+  \begin{subfigure}[t]{.5\textwidth}
+    \centering
+    \includegraphics[width=0.63\textwidth]{./code/results/coins_dilate_segmentation.eps}
+    \setcaptionwidth{0.63\textwidth}
+  \end{subfigure}
+  \caption{Dilation of Fig. \ref{subfig:./code/results/coins_direct_segmentation.eps}}
+  \label{subfig:./code/results/coins_dilate_segmentation.eps}
+\end{figure}
+
+\subsection{Erosion}
+
+Erosion of gray-level images is defined in a similar manner to dilation: the gray-level
+value at any point is replaced by the minimum intensity value covered by the flat structuring element.
+Fig. \ref{subfig:./code/results/coins_erode_segmentation.eps} shows that the erosion operation
+could reduce the salt noise but make the pepper noise more intensive.
+
+%\usepackage{subcaption}
+\begin{figure}[!htb]
+  \centering
+  \begin{subfigure}[t]{.5\textwidth}
+    \centering
+    \includegraphics[width=0.63\textwidth]{./code/results/coins_erode_segmentation.eps}
+    \setcaptionwidth{0.63\textwidth}
+  \end{subfigure}
+  \caption{Erosion of Fig. \ref{subfig:./code/results/coins_direct_segmentation.eps}}
+  \label{subfig:./code/results/coins_erode_segmentation.eps}
+\end{figure}
+
+\subsection{Morphologically open image}
+
+I perform morphological opening on the binary image Fig. \ref{subfig:./code/results/coins_direct_segmentation.eps}.
+Fig. \ref{subfig:./code/results/coins_open_segmentation.eps} shows the result. It's clear that
+the opening operation could reduce the salt noise effectively.
+
+%\usepackage{subcaption}
+\begin{figure}[!htb]
+  \centering
+  \begin{subfigure}[t]{.5\textwidth}
+    \centering
+    \includegraphics[width=0.63\textwidth]{./code/results/coins_open_segmentation.eps}
+    \setcaptionwidth{0.63\textwidth}
+  \end{subfigure}
+  \caption{Morphological opening operation on Fig. \ref{subfig:./code/results/coins_direct_segmentation.eps}}
+  \label{subfig:./code/results/coins_open_segmentation.eps}
+\end{figure}
+
+\subsection{Morphologically close image}
+
+Analogous to opening operation, I perform morphological closing operation on the binary image
+and find that it's very useful for the closing operation to reduce the pepper noise.
+Fig. \ref{subfig:./code/results/coins_close_segmentation.eps} shows our results.
+
+%\usepackage{subcaption}
+\begin{figure}[h]
+  \centering
+  \begin{subfigure}[t]{.5\textwidth}
+    \centering
+    \includegraphics[width=0.63\textwidth]{./code/results/coins_close_segmentation.eps}
+    \setcaptionwidth{0.63\textwidth}
+  \end{subfigure}
+  \caption{Morphological closing operation on Fig. \ref{subfig:./code/results/coins_direct_segmentation.eps}}
+  \label{subfig:./code/results/coins_close_segmentation.eps}
+\end{figure}
+
+\subsection{Combining Opening and Closing Operation}
+
+To reduce the salt-and-pepper noise at the same time, I perform the opening operation followed
+by a closing operation. \ref{subfig:./code/results/coins_open_and_close_segmentation.eps} shows
+the results. We can find that the salt-and-pepper noise was reduced completely.
+
+%\usepackage{subcaption}
+\begin{figure}[!htb]
+  \centering
+  \begin{subfigure}[t]{.5\textwidth}
+    \centering
+    \includegraphics[width=0.63\textwidth]{./code/results/coins_open_and_close_segmentation.eps}
+    \setcaptionwidth{0.63\textwidth}
+  \end{subfigure}
+  \caption{Opening followed by a closing operation}
+  \label{subfig:./code/results/coins_open_and_close_segmentation.eps}
+\end{figure}
+
+
 \section{Conclusion}
 
-\section*{Acknowledgment}
+This report experiments four different morphological operations: dilation, erosion, opening, closing operations.
+Morphological operations in this report are used for noise removal and to produce the best results of segmentation.
+Dilation is used to enlarge boundaries and closing holes, while erosion does the opposite. Opening performs erosion
+followed by dilation and closing, vice versa. Each operation may be applied repeatedly on the image to produce the
+best desired result. For example, an image may be subjected to dilation, erosion, erosion and dilation to produce the intended result.
 
+\section*{Acknowledgment}
+I would like to thank Professor Zhang Rui for her instruction.
 
 \begin{thebibliography}{1}
-\bibitem{wavelet}
-  Chang, S. Grace, Bin Yu, and Martin Vetterli. "Image denoising via lossy compression and wavelet thresholding."
-  Image Processing, 1997. Proceedings., International Conference on. Vol. 1. IEEE, 1997.
-
+\bibitem{Otsu}
+  Otsu, Nobuyuki. "A threshold selection method from gray-level histograms." Automatica 11.285-296 (1975): 23-27.
+\bibitem{noise}
+  S. Umbaugh, Computer Vision and Image Processing. Prentice Hall Inc. 1999.
 \end{thebibliography}
-
 
 % \begin{IEEEbiographynophoto}{Zhou Peng}
 %   received his bachelor degree from UESTC.He is now studying for a PhD in SJTU.
@@ -64,5 +250,6 @@
 \vfill
 
 \end{document}
+
 
 
