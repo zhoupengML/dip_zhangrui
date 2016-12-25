@@ -1,3 +1,7 @@
+/zhoupeng_016034910052_project4/code/images/
+
+
+
 /zhoupeng_016034910052_project3/code/toolbox_signal/
 /zhoupeng_016034910052_project3/code/toolbox_general/
 /zhoupeng_016034910052_project3/code/test.m
@@ -26,3 +30,5 @@ IEEEtran/
 comsoctran.mac.win.zip
 slides/
 *.pdf
+*.aux
+*.log

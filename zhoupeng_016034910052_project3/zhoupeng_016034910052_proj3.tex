@@ -18,7 +18,7 @@
 
 \begin{document}
 \title{Image Denosing with Wavelet-based Algorithms}
-\author{Zhou~Peng,~\IEEEmembership{Member,~SEIEE~5-321,}}
+\author{Zhou~Peng,~\IEEEmembership{016034910052,~SEIEE~5-321,}}
 \maketitle
 
 \begin{abstract}
@@ -56,7 +56,6 @@ merit function used for its computation. This is the main reason why we can hear
 in very different situations and applications. 
 
 
-
 % \section{Related Work}
 % \label{sec:related work}
 
@@ -72,7 +71,7 @@ levels, while the signal increases to such significant levels, that for all prac
 is not necessary. Unfortunately, the noise corrupting the signal, more often than not, must be
 removed in order to recover the signal and proceed with further data analysis.
 
-The principle of wavelet denoising is that we can convert the original signal from time-space domain to
+The principle of wavelet denoising\cite{wavelet} is that we can convert the original signal from time-space domain to
 the time-scale domain via the wavelet transform. And in the time-scale domain, the noise can be eliminated
 easily. There are so many different methods for wavelet denoising. In this report, I will mainly focus on
 the hard threshold method and the soft threshold method.
@@ -180,11 +179,9 @@ standard deviation of the Gaussian noise in $[0.1,0.2,0.3]$, I tested the perfor
 wavelet denoising based on hard threshold. 
 I tested several hard threshold in $[0.1\sigma,0.15\sigma,0.3\sigma,0.45\sigma]$,
 where $\sigma$ is the standard deviation of the added Gaussian noise.
-Fig. \ref{fig:sigma-10-hard-threshold} - Fig. \ref{fig:sigma-30-hard-threshold} shows our results.
+Fig. \ref{fig:sigma-10-hard-threshold} - Fig. \ref{fig:flower-sigma-30-hard-threshold} shows our results.
 We can find that the wavelet denoising algorithm based on hard threshold is effective to
 denoise Gaussian noise. And the best hard threshold is approximately at $0.3\sigma$.
-
-
 
 
 
@@ -193,7 +190,7 @@ denoise Gaussian noise. And the best hard threshold is approximately at $0.3\sig
 
 Analogous to hard threshold denoising algorithm, I keep other conditions invariant, and
 change the hard threshold to soft threshold. Fig. \ref{fig:sigma-10-soft-threshold} -
-Fig. \ref{fig:sigma-30-soft-threshold} shows the results. From the results, we can
+Fig. \ref{fig:flower-sigma-30-soft-threshold} shows the results. From the results, we can
 easily find that the best soft threshold is approximately at $0.15\sigma$. When the
 soft threshold is too small, the Gaussian noise can't be eliminated effectively. But
 if the soft threshold is too big, the recovered images will become more fuzzy.
@@ -363,6 +360,132 @@ and for soft threshold is about $1.5\sigma$.
   \label{fig:sigma-30-hard-threshold}
 \end{figure}
 
+
+% second image
+\begin{figure}[!hbt]
+  \centering
+  \begin{subfigure}{.25\textwidth}
+    \centering
+    \includegraphics[width=0.68\textwidth]{./code/results/flowr.eps}
+    \caption{Original image of Flower}
+    \label{subfig:original-image-of-flower}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering
+    \includegraphics[width=0.68\textwidth]{./code/results/flowr_noise_sigma_10.eps}
+    \caption{Noisy image of (a)}
+    \label{subfig:sigma-10-noisy-image-of-a}
+  \end{subfigure}
+
+  \begin{subfigure}{0.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/flowr_sigma_10_hard_1.eps}
+    \caption{Hard threshold: $0.1\sigma$}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/flowr_sigma_10_hard_15.eps}
+    \caption{Hard threshold: $0.15\sigma$}
+  \end{subfigure}
+
+  \begin{subfigure}{0.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/flowr_sigma_10_hard_30.eps}
+    \caption{Hard threshold: $0.3\sigma$}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/flowr_sigma_10_hard_45.eps}
+    \caption{Hard threshold: $0.45\sigma$}
+  \end{subfigure}
+  
+  \caption{Denoising using hard threshold, $\sigma=0.1$}
+  \label{fig:flower-sigma-10-hard-threshold}
+\end{figure}
+
+\begin{figure}[!hbt]
+  \centering
+  \begin{subfigure}{.25\textwidth}
+    \centering
+    \includegraphics[width=0.68\textwidth]{./code/results/flowr.eps}
+    \caption{Original image of Flower}
+    \label{subfig:original-image-of-flower}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering
+    \includegraphics[width=0.68\textwidth]{./code/results/flowr_noise_sigma_20.eps}
+    \caption{Noisy image of (a)}
+    \label{subfig:flower-sigma-10-noisy-image-of-a}
+  \end{subfigure}
+
+  \begin{subfigure}{0.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/flowr_sigma_20_hard_1.eps}
+    \caption{Hard threshold: $0.1\sigma$}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/flowr_sigma_20_hard_15.eps}
+    \caption{Hard threshold: $0.15\sigma$}
+  \end{subfigure}
+
+  \begin{subfigure}{0.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/flowr_sigma_20_hard_30.eps}
+    \caption{Hard threshold: $0.3\sigma$}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/flowr_sigma_20_hard_45.eps}
+    \caption{Hard threshold: $0.45\sigma$}
+  \end{subfigure}
+  
+  \caption{Denoising using hard threshold, $\sigma=0.2$}
+  \label{fig:flower-sigma-20-hard-threshold}
+\end{figure}
+
+\begin{figure}[!hbt]
+  \centering
+  \begin{subfigure}{.25\textwidth}
+    \centering
+    \includegraphics[width=0.68\textwidth]{./code/results/flowr.eps}
+    \caption{Original image of Flower}
+    \label{subfig:original-image-of-flower}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering
+    \includegraphics[width=0.68\textwidth]{./code/results/flowr_noise_sigma_30.eps}
+    \caption{Noisy image of (a)}
+    \label{subfig:flower-sigma-10-noisy-image-of-a}
+  \end{subfigure}
+
+  \begin{subfigure}{0.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/flowr_sigma_30_hard_1.eps}
+    \caption{Hard threshold: $0.1\sigma$}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/flowr_sigma_30_hard_15.eps}
+    \caption{Hard threshold: $0.15\sigma$}
+  \end{subfigure}
+
+  \begin{subfigure}{0.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/flowr_sigma_30_hard_30.eps}
+    \caption{Hard threshold: $0.3\sigma$}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/flowr_sigma_30_hard_45.eps}
+    \caption{Hard threshold: $0.45\sigma$}
+  \end{subfigure}
+  
+  \caption{Denoising using hard threshold, $\sigma=0.3$}
+  \label{fig:flower-sigma-30-hard-threshold}
+\end{figure}
+
+
 % Soft threshold
 \begin{figure}[!hbt]
   \centering
@@ -488,6 +611,131 @@ and for soft threshold is about $1.5\sigma$.
 \end{figure}
 
 
+% second image
+\begin{figure}[!hbt]
+  \centering
+  \begin{subfigure}{.25\textwidth}
+    \centering
+    \includegraphics[width=0.68\textwidth]{./code/results/flowr.eps}
+    \caption{Original image of Flower}
+    \label{subfig:original-image-of-flower}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering
+    \includegraphics[width=0.68\textwidth]{./code/results/flowr_noise_sigma_10.eps}
+    \caption{Noisy image of (a)}
+    \label{subfig:sigma-10-noisy-image-of-a}
+  \end{subfigure}
+
+  \begin{subfigure}{0.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/flowr_sigma_10_soft_1.eps}
+    \caption{Soft threshold: $0.1\sigma$}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/flowr_sigma_10_soft_15.eps}
+    \caption{Soft threshold: $0.15\sigma$}
+  \end{subfigure}
+
+  \begin{subfigure}{0.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/flowr_sigma_10_soft_30.eps}
+    \caption{Soft threshold: $0.3\sigma$}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/flowr_sigma_10_soft_45.eps}
+    \caption{Soft threshold: $0.45\sigma$}
+  \end{subfigure}
+  
+  \caption{Denoising using soft threshold, $\sigma=0.1$}
+  \label{fig:flower-sigma-10-soft-threshold}
+\end{figure}
+
+\begin{figure}[!hbt]
+  \centering
+  \begin{subfigure}{.25\textwidth}
+    \centering
+    \includegraphics[width=0.68\textwidth]{./code/results/flowr.eps}
+    \caption{Original image of Flower}
+    \label{subfig:original-image-of-flower}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering
+    \includegraphics[width=0.68\textwidth]{./code/results/flowr_noise_sigma_20.eps}
+    \caption{Noisy image of (a)}
+    \label{subfig:flower-sigma-10-noisy-image-of-a}
+  \end{subfigure}
+
+  \begin{subfigure}{0.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/flowr_sigma_20_soft_1.eps}
+    \caption{Soft threshold: $0.1\sigma$}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/flowr_sigma_20_soft_15.eps}
+    \caption{Soft threshold: $0.15\sigma$}
+  \end{subfigure}
+
+  \begin{subfigure}{0.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/flowr_sigma_20_soft_30.eps}
+    \caption{Soft threshold: $0.3\sigma$}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/flowr_sigma_20_soft_45.eps}
+    \caption{Soft threshold: $0.45\sigma$}
+  \end{subfigure}
+  
+  \caption{Denoising using soft threshold, $\sigma=0.2$}
+  \label{fig:flower-sigma-20-soft-threshold}
+\end{figure}
+
+\begin{figure}[!hbt]
+  \centering
+  \begin{subfigure}{.25\textwidth}
+    \centering
+    \includegraphics[width=0.68\textwidth]{./code/results/flowr.eps}
+    \caption{Original image of Flower}
+    \label{subfig:original-image-of-flower}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering
+    \includegraphics[width=0.68\textwidth]{./code/results/flowr_noise_sigma_30.eps}
+    \caption{Noisy image of (a)}
+    \label{subfig:flower-sigma-10-noisy-image-of-a}
+  \end{subfigure}
+
+  \begin{subfigure}{0.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/flowr_sigma_30_soft_1.eps}
+    \caption{Soft threshold: $0.1\sigma$}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/flowr_sigma_30_soft_15.eps}
+    \caption{Soft threshold: $0.15\sigma$}
+  \end{subfigure}
+
+  \begin{subfigure}{0.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/flowr_sigma_30_soft_30.eps}
+    \caption{Soft threshold: $0.3\sigma$}
+  \end{subfigure}%
+  \begin{subfigure}{.25\textwidth}
+    \centering{}
+    \includegraphics[width=.68\textwidth]{./code/results/flowr_sigma_30_soft_45.eps}
+    \caption{Soft threshold: $0.45\sigma$}
+  \end{subfigure}
+  
+  \caption{Denoising using soft threshold, $\sigma=0.3$}
+  \label{fig:flower-sigma-30-soft-threshold}
+\end{figure}
+
+
 \section{Conclusion}
 
 This report shows how to use wavelets to denoise images. Because wavelets localize
@@ -504,9 +752,10 @@ threshold the coefficients, you can reconstruct the data using the inverse wavel
 I would like to thank Professor Zhang Rui for her instruction.
 
 \begin{thebibliography}{1}
-\bibitem{dark-channel}
-  He K, Sun J, Tang X. Single image haze removal using dark channel prior[J].
-  IEEE transactions on pattern analysis and machine intelligence, 2011, 33(12): 2341-2353.
+\bibitem{wavelet}
+  Chang, S. Grace, Bin Yu, and Martin Vetterli. "Image denoising via lossy compression and wavelet thresholding."
+  Image Processing, 1997. Proceedings., International Conference on. Vol. 1. IEEE, 1997.
+
 \end{thebibliography}
 
 
